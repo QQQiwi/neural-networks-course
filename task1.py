@@ -17,18 +17,37 @@ def parse_arguments():
     return params['input'], params['output']
 
 
-def parse_input(input):
-    graph = None
-
+def make_graph(input):
+    graph = {}
     pairs = input[1:len(input) - 1].split("), (")
     for elems in pairs:
-        pass
-
+        edges = elems.split(", ")
+        from_vertice = edges[0]
+        vertice_n_order = (edges[1], edges[2])
+        if from_vertice in graph.keys():
+            if vertice_n_order in graph[from_vertice]:
+                continue
+            graph[from_vertice].append(vertice_n_order)
+            graph[from_vertice] = sorted(graph[from_vertice],
+                                         key=lambda tup: tup[1])
+        else:
+            graph[from_vertice] = [vertice_n_order]
     return graph
 
 
-def create_xml(graph):
-    pass
+def create_xml(graph, output_file):
+    xml_tree = et.Element('graph')
+    for v in graph.keys():
+        et.SubElement(xml_tree, 'vertex').text = v
+    for from_v, listed_edges in graph.items():
+        for to_v, order in listed_edges:
+            arc = et.SubElement(xml_tree, 'arc')
+            et.SubElement(arc, 'from').text = from_v
+            et.SubElement(arc, 'to').text = to_v
+            et.SubElement(arc, 'order').text = order
+    xml_tree = et.ElementTree(xml_tree)
+    xml_tree.write(output_file, pretty_print=True, encoding='utf-8')
+    print(f"Граф создан и сохранен в файл {output_file}.")
 
 
 def main():
@@ -43,15 +62,19 @@ def main():
         with open(input) as f:
             contents = f.read()
     except:
-        print("Ошибка чтения входного файла!")
+        print("Ошибка чтения входного файла.")
         return 0
 
     try:
-        graph = parse_input(contents)
+        graph = make_graph(contents)
     except:
-        print("Ошибка формата записи данных во входном файле!")
+        print("Не удалось создать граф с помощью входного файла.")
         return 0
-    # create_xml(graph)
+    
+    try:
+        create_xml(graph, output)
+    except:
+        print("Не удалось сохранить граф в xml-файл.")
 
 
 if __name__ == "__main__":
