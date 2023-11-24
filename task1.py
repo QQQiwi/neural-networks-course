@@ -12,7 +12,7 @@ def check_arg_type(arg):
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('params', nargs='+', type=check_arg_type,
-                        help='input=arcs1.txt output=output1.xml')
+                        help='input=task1.txt output=task1.xml')
     params = dict(parser.parse_args().params)
     return params['input'], params['output']
 
@@ -23,7 +23,9 @@ def make_graph(input):
     for elems in pairs:
         edges = elems.split(", ")
         from_vertice = edges[0]
-        vertice_n_order = (edges[1], edges[2])
+        to_vertice = edges[1]
+        vertice_n_order = (to_vertice, edges[2])
+        int(edges[2]) # для проверки на корректность задачи порядка
         if from_vertice in graph.keys():
             if vertice_n_order in graph[from_vertice]:
                 continue
@@ -32,6 +34,9 @@ def make_graph(input):
                                          key=lambda tup: tup[1])
         else:
             graph[from_vertice] = [vertice_n_order]
+        
+        if to_vertice not in graph.keys():
+            graph[to_vertice] = list()
     return graph
 
 
