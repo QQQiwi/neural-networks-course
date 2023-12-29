@@ -1,6 +1,7 @@
 import pandas as pd
 import math
 import argparse
+import numpy as np
 
 
 def check_arg_type(arg):
@@ -19,63 +20,64 @@ def parse_arguments():
 
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + np.exp(-x))
 
 
-def deriv_sigmoid(x):
-    fx = sigmoid(x)
-    return fx * (1 - fx)
-
-
-class NeuralNetwork:
-    '''
-    Нейронная сеть с:
-        - 3 входами
-        - скрытым слоем с 3 нейронами (h1, h2, h3)
-        - выходной слой с 1 нейроном (o1)
-    '''
-    weights = []
-
-    layers_amount = 3
-
+class HiddenLayer:
+    w = []
+    inp = []
+    out = []
+    m = 0
+    n = 0
     def __init__(self, w):
-        # Веса
-        self.w1 = 1
-        self.w2 = 1
-        self.w3 = 1
-        self.w4 = 1
-        self.w5 = 1
-        self.w6 = 1
-        self.w7 = 1
-        self.w8 = 1
-        self.w9 = 1
-        self.w10 = 1
-        self.w11 = 1
-        self.w12 = 1
-        # Смещения
-        self.b1 = 0
-        self.b2 = 0
-        self.b3 = 0
-        self.b4 = 0
-
-    def feedforward(self, x):
-        h1 = sigmoid(self.w1 * x[0] + self.w2 * x[1] + self.w7 * x[2] + self.b1)
-        h2 = sigmoid(self.w3 * x[0] + self.w4 * x[1] + self.w8 * x[2] + self.b2)
-        h3 = sigmoid(self.w9 * x[0] + self.w10 * x[1] + self.w11 * x[2] + self.b4)
-        o1 = sigmoid(self.w5 * h1 + self.w6 * h2 + self.w12 * h3 + self.b3)
-        return o1
+        self.w = w
+        self.m = len(w[0])
+        self.n = len(w)
+        self.inp = []
+        self.out = []
     
 
-    def save(save_path):
-        pass
+class NeuralNetwork:
+    layers_amount_default = 3
+    layers_amount = layers_amount_default
+    layers = []
+    # biases = []
+    outputs = []
+
+    def __init__(self, w, x):
+        self.layers = [HiddenLayer(cur_w) for cur_w in w]
+        self.layers[0].inp = x
+        self.outputs = [0 for _ in range(len(x))]
+        self.layers_amount = len(self.layers)
+
+
+    def feedforward(self):
+        for i in range(self.layers_amount):
+            cur_layer = self.layers[i]
+            cur_layer_y = np.dot(cur_layer.inp, cur_layer.w)
+            for j in range(cur_layer.n):
+                cur_layer_y[j] = sigmoid(cur_layer_y[j])
+            cur_layer.out = cur_layer_y.copy()
+            if i < self.layers_amount - 1:
+                self.layers[i + 1].inp = cur_layer_y.copy()
+        return self.layers[-1].out
+    
+
+    def save(self, save_path):
+        with open(save_path, 'w', encoding='utf-8') as file:
+            weights = [layer.w for layer in self.layers]
+            file.write(str(weights))
 
 
 def get_list_data_from_file(data_path):
-    pass
+    with open(data_path, 'r') as file:
+        data_list = file.read()
+    data_list = eval(data_list)
+    return data_list
 
 
 def get_random_weights(m, n):
-    pass
+    return np.random.rand(m, m, n).tolist()
 
 
 def main():
@@ -87,12 +89,12 @@ def main():
 
     x = get_list_data_from_file(x_path)
     if w_path == "None":
-        w = get_random_weights(NeuralNetwork.layers_amount, len(x))
+        w = get_random_weights(NeuralNetwork.layers_amount_default, len(x))
     else:
         w = get_list_data_from_file(w_path)
 
-    network = NeuralNetwork(w)
-    y = network.feedforward(x)
+    network = NeuralNetwork(w, x)
+    y = network.feedforward()
     with open(y_path, 'w', encoding='utf-8') as file:
         file.write(str(y))
     network.save(nn_output)
