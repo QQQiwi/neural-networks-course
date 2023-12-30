@@ -28,7 +28,7 @@ def deriv_sigmoid(x):
 
 
 def mse_loss(y_true, y_pred):
-    return ((y_true - y_pred) ** 2).mean()
+    return ((np.array(y_true) - np.array(y_pred)) ** 2).mean()
 
 
 class HiddenLayer:
@@ -81,16 +81,17 @@ class NeuralNetwork:
             cur_layer = self.layers[p]
             for i in range(cur_layer.m):
                 for j in range(cur_layer.n):
-                    cur_layer.w[i][j] -= self.learning_rate * self.dd[p][i] * cur_layer.x[j]
+                    cur_layer.w[i][j] -= self.learning_rate * self.dd[p][i] * cur_layer.inp[j]
 
 
     def train(self):
         loss = []
         for cur_epoch in range(self.epoch_amount):
+            predicted_values = []    
             for x, y_true in zip(self.train_data, self.true_values):
                 self.layers[0].inp = x
                 y = self.feedforward()
-
+                predicted_values.append(y)
                 y_amount = len(y)
                 self.dd[-1] = [0 for _ in range(y_amount)]
                 for i in range(y_amount):
@@ -105,13 +106,11 @@ class NeuralNetwork:
                         self.dd[p - 1][i] *= deriv_sigmoid(self.layers[p - 1].out[i])
                 
                 self.update_weights()
-                
 
-    
-            predicted_values = pd.Series(list(map(self.feedforward, self.train_data)))
-            loss_value = mse_loss(self.true_values, predicted_values)
-            print(f"Ошибка на эпохе {cur_epoch} равна {loss_value}.")
-            loss.append(loss_value)
+            if cur_epoch % 10:
+                loss_value = mse_loss(self.true_values, predicted_values)
+                print(f"Ошибка на эпохе {cur_epoch} равна {loss_value}")
+                loss.append(loss_value)
 
 
     def save(self, save_path):
@@ -132,17 +131,17 @@ def get_random_weights(m, n):
 
 
 def main():
-    # try:
-    w_path, x_path, nn_output, y_path, epochs = parse_arguments()
-    # except:
-        # print("Ошибка чтения аргументов!")
-        # return 0
+    try:
+        w_path, x_path, nn_output, y_path, epochs = parse_arguments()
+    except:
+        print("Ошибка чтения аргументов!")
+        return 0
 
     x = get_list_data_from_file(x_path)
     y = get_list_data_from_file(y_path)
 
     if w_path == "None":
-        w = get_random_weights(len(x), len(x))
+        w = get_random_weights(len(x[0]), len(x[0]))
     else:
         w = get_list_data_from_file(w_path)
 
