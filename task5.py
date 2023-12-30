@@ -13,7 +13,7 @@ def check_arg_type(arg):
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('params', nargs='+', type=check_arg_type,
-                        help='w=w.txt x=x.txt nn_output=nn.txt y=y.txt')
+                        help='')
     params = dict(parser.parse_args().params)
     return params['w'], params['x'], params['nn'], params['y'], params['epochs'], params['loss']
 
@@ -107,7 +107,7 @@ class NeuralNetwork:
                     self.dd[p - 1] = [0 for _ in range(y_amount)]
                     for i in range(cur_layer.n):
                         for j in range(cur_layer.m):
-                            self.dd[p - 1][i] += cur_layer.w[j][i] * self.dd[p][j]
+                            self.dd[p - 1][i] += cur_layer.w[j][i] * self.dd[p][i]
                         self.dd[p - 1][i] *= deriv_sigmoid(self.layers[p - 1].out[i])
                 
                 self.update_weights()
