@@ -1,9 +1,25 @@
+import argparse
+import numpy as np
 import pandas as pd
-import math
+
+
+def check_arg_type(arg):
+    args = arg.split('=')
+    if len(args) != 2:
+        raise argparse.ArgumentTypeError('Аргументы введены некорректно.')
+    return args[0], args[1]
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('params', nargs='+', type=check_arg_type,
+                        help='w=w.txt x=x.txt nn_output=nn.txt y=y.txt')
+    params = dict(parser.parse_args().params)
+    return params['w'], params['x'], params['nn'], params['y'], params['epochs']
 
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + np.exp(-x))
 
 
 def deriv_sigmoid(x):
@@ -15,144 +31,126 @@ def mse_loss(y_true, y_pred):
     return ((y_true - y_pred) ** 2).mean()
 
 
+class HiddenLayer:
+    w = []
+    inp = []
+    out = []
+    m = 0
+    n = 0
+    def __init__(self, w):
+        self.w = w
+        self.m = len(w[0])
+        self.n = len(w)
+        self.inp = []
+        self.out = [0 for _ in range(self.n)]
+    
 
 class NeuralNetwork:
-    '''
-    Нейронная сеть с:
-        - 3 входами
-        - скрытым слоем с 3 нейронами (h1, h2, h3)
-        - выходной слой с 1 нейроном (o1)
-    '''
-    def __init__(self):
-        # Веса
-        self.w1 = 1
-        self.w2 = 1
-        self.w3 = 1
-        self.w4 = 1
-        self.w5 = 1
-        self.w6 = 1
-        self.w7 = 1
-        self.w8 = 1
-        self.w9 = 1
-        self.w10 = 1
-        self.w11 = 1
-        self.w12 = 1
-        # Смещения
-        self.b1 = 0
-        self.b2 = 0
-        self.b3 = 0
-        self.b4 = 0
+    layers_amount = 0
+    layers = []
+    # biases = []
+    learning_rate = 0.1
+    train_data = []
+    true_values = []
+    epoch_amount = 0
+    dd = []
 
-    def feedforward(self, x):
-        # x входные элементы.
-        h1 = sigmoid(self.w1 * x[0] + self.w2 * x[1] + self.w7 * x[2] + self.b1)
-        h2 = sigmoid(self.w3 * x[0] + self.w4 * x[1] + self.w8 * x[2] + self.b2)
-        h3 = sigmoid(self.w9 * x[0] + self.w10 * x[1] + self.w11 * x[2] + self.b4)
-        o1 = sigmoid(self.w5 * h1 + self.w6 * h2 + self.w12 * h3 + self.b3)
-        return o1
-
-    def train(self, data, all_y_trues):
-        '''
-        - data - массив размерами (n x 2), где n -количество наблюдений в наборе.
-        - all_y_trues - спиоск истинных значений (целевых).
-        Элементы all_y_trues соответствуют наблюдениям в data.
-        '''
-        learn_rate = 0.1
-        epochs = 1000 # сколько раз пройти по всему набору данных
-
-        for epoch in range(epochs):
-            for x, y_true in zip(data, all_y_trues):
-                # --- Прямой проход (эти значения нам понадобятся позже)
-                sum_h1 = self.w1 * x[0] + self.w2 * x[1] + self.w7 * x[2] + self.b1
-                h1 = sigmoid(sum_h1)
-
-                sum_h2 = self.w3 * x[0] + self.w4 * x[1] + self.w8 * x[2] + self.b2
-                h2 = sigmoid(sum_h2)
-
-                sum_h3 = self.w9 * x[0] + self.w10 * x[1] + self.w11 * x[2] + self.b4
-                h3 = sigmoid(sum_h2)
-
-                sum_o1 = self.w5 * h1 + self.w6 * h2 + self.w12 * h3 + self.b3
-                o1 = sigmoid(sum_o1)
-                y_pred = o1
-
-                # --- Считаем частные производные.
-                d_L_d_ypred = -2 * (y_true - y_pred)
-
-                # Нейрон o1
-                d_ypred_d_w5 = h1 * deriv_sigmoid(sum_o1)
-                d_ypred_d_w6 = h2 * deriv_sigmoid(sum_o1)
-                d_ypred_d_w12 = h3 * deriv_sigmoid(sum_o1)
-                d_ypred_d_b3 = deriv_sigmoid(sum_o1)
-
-                d_ypred_d_h1 = self.w5 * deriv_sigmoid(sum_o1)
-                d_ypred_d_h2 = self.w6 * deriv_sigmoid(sum_o1)
-                d_ypred_d_h3 = self.w12 * deriv_sigmoid(sum_o1)
-
-                # Нейрон h1
-                d_h1_d_w1 = x[0] * deriv_sigmoid(sum_h1)
-                d_h1_d_w2 = x[1] * deriv_sigmoid(sum_h1)
-                d_h1_d_w7 = x[2] * deriv_sigmoid(sum_h1)
-                d_h1_d_b1 = deriv_sigmoid(sum_h1)
-
-                # Нейрон h2
-                d_h2_d_w3 = x[0] * deriv_sigmoid(sum_h2)
-                d_h2_d_w4 = x[1] * deriv_sigmoid(sum_h2)
-                d_h2_d_w8 = x[2] * deriv_sigmoid(sum_h2)
-                d_h2_d_b2 = deriv_sigmoid(sum_h2)
-
-                # Нейрон h3
-                d_h3_d_w9 = x[0] * deriv_sigmoid(sum_h3)
-                d_h3_d_w10 = x[1] * deriv_sigmoid(sum_h3)
-                d_h3_d_w11 = x[2] * deriv_sigmoid(sum_h3)
-                d_h3_d_b4 = deriv_sigmoid(sum_h3)
-
-                # --- Обновляем веса и пороги
-                # Нейрон h1
-                self.w1 -= learn_rate * d_L_d_ypred * d_ypred_d_h1 * d_h1_d_w1
-                self.w2 -= learn_rate * d_L_d_ypred * d_ypred_d_h1 * d_h1_d_w2
-                self.w7 -= learn_rate * d_L_d_ypred * d_ypred_d_h1 * d_h1_d_w7
-                self.b1 -= learn_rate * d_L_d_ypred * d_ypred_d_h1 * d_h1_d_b1
-
-                # Нейрон h2
-                self.w3 -= learn_rate * d_L_d_ypred * d_ypred_d_h2 * d_h2_d_w3
-                self.w4 -= learn_rate * d_L_d_ypred * d_ypred_d_h2 * d_h2_d_w4
-                self.w8 -= learn_rate * d_L_d_ypred * d_ypred_d_h2 * d_h2_d_w8
-                self.b2 -= learn_rate * d_L_d_ypred * d_ypred_d_h2 * d_h2_d_b2
-
-                # Нейрон h3
-                self.w9 -= learn_rate * d_L_d_ypred * d_ypred_d_h3 * d_h3_d_w9
-                self.w10 -= learn_rate * d_L_d_ypred * d_ypred_d_h3 * d_h3_d_w10
-                self.w11 -= learn_rate * d_L_d_ypred * d_ypred_d_h3 * d_h3_d_w11
-                self.b2 -= learn_rate * d_L_d_ypred * d_ypred_d_h3 * d_h3_d_b4
+    def __init__(self, w, x, y, epochs):
+        self.layers = [HiddenLayer(cur_w) for cur_w in w]
+        self.layers_amount = len(self.layers)
+        self.train_data = x
+        self.true_values = y
+        self.epoch_amount = epochs
+        self.dd = [[]] * self.layers_amount
 
 
+    def feedforward(self):
+        for i in range(self.layers_amount):
+            cur_layer = self.layers[i]
+            cur_layer_y = np.dot(cur_layer.w, cur_layer.inp)
+            for j in range(cur_layer.n):
+                cur_layer_y[j] = sigmoid(cur_layer_y[j])
+            cur_layer.out = cur_layer_y.copy()
+            if i < self.layers_amount - 1:
+                self.layers[i + 1].inp = cur_layer_y.copy()
+        return self.layers[-1].out.tolist()
+    
 
-                # Нейрон o1
-                self.w5 -= learn_rate * d_L_d_ypred * d_ypred_d_w5
-                self.w6 -= learn_rate * d_L_d_ypred * d_ypred_d_w6
-                self.w12 -= learn_rate * d_L_d_ypred * d_ypred_d_w12
-                self.b3 -= learn_rate * d_L_d_ypred * d_ypred_d_b3
+    def update_weights(self):
+        for p in range(self.layers_amount):
+            cur_layer = self.layers[p]
+            for i in range(cur_layer.m):
+                for j in range(cur_layer.n):
+                    cur_layer.w[i][j] -= self.learning_rate * self.dd[p][i] * cur_layer.x[j]
 
-        # --- Считаем полные потери в конце каждой эпохи
-        if epoch % 10 == 0:
-            y_preds = pd.Series(list(map(self.feedforward, data)))
-            loss = mse_loss(all_y_trues, y_preds)
-            print("Эпоха %d потери: %.3f" % (epoch, loss))
+
+    def train(self):
+        loss = []
+        for cur_epoch in range(self.epoch_amount):
+            for x, y_true in zip(self.train_data, self.true_values):
+                self.layers[0].inp = x
+                y = self.feedforward()
+
+                y_amount = len(y)
+                self.dd[-1] = [0 for _ in range(y_amount)]
+                for i in range(y_amount):
+                    self.dd[-1][i] = (y[i] - y_true[i]) * deriv_sigmoid(y[i])
+                
+                for p in range(self.layers_amount - 1, 0, -1):
+                    cur_layer = self.layers[p]
+                    self.dd[p - 1] = [0 for _ in range(y_amount)]
+                    for i in range(cur_layer.n):
+                        for j in range(cur_layer.m):
+                            self.dd[p - 1][i] += cur_layer.w[j][i] * self.dd[p][j]
+                        self.dd[p - 1][i] *= deriv_sigmoid(self.layers[p - 1].out[i])
+                
+                self.update_weights()
+                
+
+    
+            predicted_values = pd.Series(list(map(self.feedforward, self.train_data)))
+            loss_value = mse_loss(self.true_values, predicted_values)
+            print(f"Ошибка на эпохе {cur_epoch} равна {loss_value}.")
+            loss.append(loss_value)
+
+
+    def save(self, save_path):
+        with open(save_path, 'w', encoding='utf-8') as file:
+            weights = [layer.w for layer in self.layers]
+            file.write(str(weights))
+
+
+def get_list_data_from_file(data_path):
+    with open(data_path, 'r') as file:
+        data_list = file.read()
+    data_list = eval(data_list)
+    return data_list
+
+
+def get_random_weights(m, n):
+    return np.random.rand(m, m, n).tolist()
+
+
+def main():
+    # try:
+    w_path, x_path, nn_output, y_path, epochs = parse_arguments()
+    # except:
+        # print("Ошибка чтения аргументов!")
+        # return 0
+
+    x = get_list_data_from_file(x_path)
+    y = get_list_data_from_file(y_path)
+
+    if w_path == "None":
+        w = get_random_weights(len(x), len(x))
+    else:
+        w = get_list_data_from_file(w_path)
+
+    network = NeuralNetwork(w, x, y, int(epochs))
+    network.train()
+    network.save(nn_output)
 
 
 if __name__ == "__main__":
-    network = NeuralNetwork()
-    data = [
-        [-4, 1, 5],  # Наталья
-        [7, -1, -4],   # Николай
-        [4, 14, 10],   # Данил
-        [-8, -18, 6], # Екатерина
-    ]
-    all_y_trues = [
-        0, # Наталья
-        1, # Николай
-        1, # Данил
-        0, # Екатерина
-    ]
-    network.train(data, all_y_trues)
+    main()
+

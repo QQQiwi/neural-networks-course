@@ -1,5 +1,3 @@
-import pandas as pd
-import math
 import argparse
 import numpy as np
 
@@ -16,7 +14,7 @@ def parse_arguments():
     parser.add_argument('params', nargs='+', type=check_arg_type,
                         help='w=w.txt x=x.txt nn_output=nn.txt y=y.txt')
     params = dict(parser.parse_args().params)
-    return params['w'], params['x'], params['nn_output'], params['y']
+    return params['w'], params['x'], params['nn'], params['y']
 
 
 def sigmoid(x):
@@ -38,8 +36,7 @@ class HiddenLayer:
     
 
 class NeuralNetwork:
-    layers_amount_default = 3
-    layers_amount = layers_amount_default
+    layers_amount = 0
     layers = []
     # biases = []
     outputs = []
@@ -54,13 +51,13 @@ class NeuralNetwork:
     def feedforward(self):
         for i in range(self.layers_amount):
             cur_layer = self.layers[i]
-            cur_layer_y = np.dot(cur_layer.inp, cur_layer.w)
+            cur_layer_y = np.dot(cur_layer.w, cur_layer.inp)
             for j in range(cur_layer.n):
                 cur_layer_y[j] = sigmoid(cur_layer_y[j])
             cur_layer.out = cur_layer_y.copy()
             if i < self.layers_amount - 1:
                 self.layers[i + 1].inp = cur_layer_y.copy()
-        return self.layers[-1].out
+        return self.layers[-1].out.tolist()
     
 
     def save(self, save_path):
@@ -89,7 +86,7 @@ def main():
 
     x = get_list_data_from_file(x_path)
     if w_path == "None":
-        w = get_random_weights(NeuralNetwork.layers_amount_default, len(x))
+        w = get_random_weights(len(x), len(x))
     else:
         w = get_list_data_from_file(w_path)
 
