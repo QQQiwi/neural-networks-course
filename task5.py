@@ -15,7 +15,7 @@ def parse_arguments():
     parser.add_argument('params', nargs='+', type=check_arg_type,
                         help='w=w.txt x=x.txt nn_output=nn.txt y=y.txt')
     params = dict(parser.parse_args().params)
-    return params['w'], params['x'], params['nn'], params['y'], params['epochs']
+    return params['w'], params['x'], params['nn'], params['y'], params['epochs'], params['loss']
 
 
 def sigmoid(x):
@@ -54,14 +54,16 @@ class NeuralNetwork:
     true_values = []
     epoch_amount = 0
     dd = []
+    loss_path = ""
 
-    def __init__(self, w, x, y, epochs):
+    def __init__(self, w, x, y, epochs, loss_path):
         self.layers = [HiddenLayer(cur_w) for cur_w in w]
         self.layers_amount = len(self.layers)
         self.train_data = x
         self.true_values = y
         self.epoch_amount = epochs
         self.dd = [[]] * self.layers_amount
+        self.loss_path = loss_path
 
 
     def feedforward(self):
@@ -86,12 +88,15 @@ class NeuralNetwork:
 
     def train(self):
         loss = []
+        output = ""
         for cur_epoch in range(self.epoch_amount):
             predicted_values = []    
             for x, y_true in zip(self.train_data, self.true_values):
                 self.layers[0].inp = x
+
                 y = self.feedforward()
                 predicted_values.append(y)
+
                 y_amount = len(y)
                 self.dd[-1] = [0 for _ in range(y_amount)]
                 for i in range(y_amount):
@@ -109,8 +114,11 @@ class NeuralNetwork:
 
             if cur_epoch % 10:
                 loss_value = mse_loss(self.true_values, predicted_values)
-                print(f"Ошибка на эпохе {cur_epoch} равна {loss_value}")
+                output += f"Ошибка на эпохе {cur_epoch} равна {loss_value}\n"
                 loss.append(loss_value)
+
+        with open(self.loss_path, 'w', encoding='utf-8') as file:
+            file.write(output)
 
 
     def save(self, save_path):
@@ -132,7 +140,7 @@ def get_random_weights(m, n):
 
 def main():
     try:
-        w_path, x_path, nn_output, y_path, epochs = parse_arguments()
+        w_path, x_path, nn_output, y_path, epochs, loss_path = parse_arguments()
     except:
         print("Ошибка чтения аргументов!")
         return 0
@@ -145,7 +153,7 @@ def main():
     else:
         w = get_list_data_from_file(w_path)
 
-    network = NeuralNetwork(w, x, y, int(epochs))
+    network = NeuralNetwork(w, x, y, int(epochs), loss_path)
     network.train()
     network.save(nn_output)
 
