@@ -27,7 +27,7 @@ python .\task4.py x=x.txt w=w.txt nn=kekw.txt y=out.txt
 Для запуска без ввода начальных значений весов (тогда веса сгенерируются автоматически исходя из количества значений $x$):
 
 ```
-python .\task4.py x=x.txt w=None nn=kekw.txt y=out.txt
+python .\task4.py x=x4.txt w=None nn=kekw.txt y=out.txt
 ```
 
 ## Задание 5
