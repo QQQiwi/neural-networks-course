@@ -112,10 +112,9 @@ class NeuralNetwork:
                 
                 self.update_weights()
 
-            if cur_epoch % 10:
-                loss_value = mse_loss(self.true_values, predicted_values)
-                output += f"Ошибка на эпохе {cur_epoch} равна {loss_value}\n"
-                loss.append(loss_value)
+            loss_value = mse_loss(self.true_values, predicted_values)
+            output += f"Ошибка на эпохе {cur_epoch} равна {loss_value}\n"
+            loss.append(loss_value)
 
         with open(self.loss_path, 'w', encoding='utf-8') as file:
             file.write(output)
