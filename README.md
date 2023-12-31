@@ -29,13 +29,13 @@ python task3.py graph=graph.txt ops=operations.txt output=res.txt
 Пример тестового запуска:
 
 ```
-python .\task4.py x=x.txt w=w.txt nn=kekw.txt y=out.txt
+python .\task4.py x=x.txt w=w.txt y=out.txt
 ```
 
 Для запуска без ввода начальных значений весов (тогда веса сгенерируются автоматически исходя из количества значений $x$):
 
 ```
-python .\task4.py x=x4.txt w=None nn=kekw.txt y=out.txt
+python .\task4.py x=x4.txt w=None y=out.txt
 ```
 
 ## Задание 5
@@ -43,7 +43,7 @@ python .\task4.py x=x4.txt w=None nn=kekw.txt y=out.txt
 Пример тестового запуска (без ввода начальных значений весов):
 
 ```
-python task5.py x=x5.txt y=y.txt w=None nn=why.txt epochs=1000 loss=results.txt
+python task5.py x=x5.txt y=y.txt w=None epochs=1000 loss=results.txt
 ```
 
 где аргумент **loss** - путь, в котором будет создан файл со значениями функции потерь на каждой 10-й эпохе, аргумент **nn** - путь, в котором будет создан файл со значениями весов после процесса обучения, аргумент **epochs** задает количество эпох обучения.
