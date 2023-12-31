@@ -1,0 +1,11 @@
+*.pdb
+*.exe
+*.aux
+*.fls
+*.log
+*.out
+*tex.gz
+*_minted-lab-*
+*latexmk
+*references
+*_minted*
