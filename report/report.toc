@@ -1,0 +1,17 @@
+\babel@toc {russian}{}
+\contentsline {section}{\numberline {1}Задание 1: Создание ориентированного графа}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Описание}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Пример исполнения программы}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Задание 2: Создание функции по графу}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Описание}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Пример исполнения программы}{5}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Задание 3: Вычисление значение функции на графе}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Описание}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Пример исполнения программы}{7}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Задание 4: Построение многослойной нейронной сети}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Описание}{9}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Пример исполнения программы}{9}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Задание 5: Реализация метода обратного распространения ошибки для многослойной НС}{11}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Описание}{11}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Пример исполнения программы}{11}{subsection.5.2}%
+\contentsfinish 

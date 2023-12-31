@@ -15,7 +15,7 @@ def parse_arguments():
     parser.add_argument('params', nargs='+', type=check_arg_type,
                         help='')
     params = dict(parser.parse_args().params)
-    return params['w'], params['x'], params['nn'], params['y'], params['epochs'], params['loss']
+    return params['w'], params['x'], params['y'], params['epochs'], params['loss']
 
 
 def sigmoid(x):
@@ -140,7 +140,7 @@ def get_random_weights(m, n):
 
 def main():
     try:
-        w_path, x_path, nn_output, y_path, epochs, loss_path = parse_arguments()
+        w_path, x_path, y_path, epochs, loss_path = parse_arguments()
     except:
         print("Ошибка чтения аргументов!")
         return 0
@@ -155,7 +155,7 @@ def main():
 
     network = NeuralNetwork(w, x, y, int(epochs), loss_path)
     network.train()
-    network.save(nn_output)
+    # network.save(nn_output)
 
 
 if __name__ == "__main__":

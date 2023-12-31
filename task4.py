@@ -14,7 +14,8 @@ def parse_arguments():
     parser.add_argument('params', nargs='+', type=check_arg_type,
                         help='w=w.txt x=x.txt nn_output=nn.txt y=y.txt')
     params = dict(parser.parse_args().params)
-    return params['w'], params['x'], params['nn'], params['y']
+    # return params['w'], params['x'], params['nn'], params['y']
+    return params['w'], params['x'], params['y']
 
 
 def sigmoid(x):
@@ -79,7 +80,7 @@ def get_random_weights(m, n):
 
 def main():
     try:
-        w_path, x_path, nn_output, y_path = parse_arguments()
+        w_path, x_path, y_path = parse_arguments()
     except:
         print("Ошибка чтения аргументов!")
         return 0
@@ -94,7 +95,7 @@ def main():
     y = network.feedforward()
     with open(y_path, 'w', encoding='utf-8') as file:
         file.write(str(y))
-    network.save(nn_output)
+    # network.save(nn_output)
 
 
 if __name__ == "__main__":

@@ -146,30 +146,378 @@
 
 \tableofcontents
 
-\section{Задание 1}
+\section{Задание 1: Создание ориентированного графа}
     \subsection{Описание}
+
+        \textbf{На входе:} текстовый файл с описанием графа в виде списка дуг:
+        \[(a_1, b_1, n_1), (a_2, b_2, n_2), \dots, (a_k, b_k, n_k),\] где $a_i$
+        "--- начальная вершина дуги $i$, $b_i$ "--- конечная вершина дуги $i$,
+        $n_i$ "--- порядковый номер дуги в списке всех заходящих в вершину $b_i$
+        дуг.
+
+        \textbf{На выходе:} Ориентированный граф с именованными вершинами и
+        линейно упорядоченными дугами (в соответствии с порядком из текстового
+        файла). Сообщение об ошибке в формате файла, если ошибка присутствует.
+        
+        % \textbf{Реализация:}
+
     \subsection{Пример исполнения программы}
 
-\section{Задание 2}
+        Рассмотрим пример, созданный для программы в файле 'test1.txt', со
+        следующим содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            (A, D, 1), (A, D, 2), (B, E, 1), (C, E, 2), (D, G, 1), (E, F, 1), (F, G, 2)
+        \end{minted}
+
+        Запускаем программу с помощью консоли следующим образом:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            python task1.py input=tests\task1\test1.txt output=tests\task1\task1_res.xml
+        \end{minted}
+
+        В качестве результата получаем файл 'task1_res.xml' с содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            <graph>
+            <vertex>A</vertex>
+            <vertex>D</vertex>
+            <vertex>B</vertex>
+            <vertex>E</vertex>
+            <vertex>C</vertex>
+            <vertex>G</vertex>
+            <vertex>F</vertex>
+            <arc>
+              <from>A</from>
+              <to>D</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>A</from>
+              <to>D</to>
+              <order>2</order>
+            </arc>
+            <arc>
+              <from>D</from>
+              <to>G</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>B</from>
+              <to>E</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>E</from>
+              <to>F</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>C</from>
+              <to>E</to>
+              <order>2</order>
+            </arc>
+            <arc>
+              <from>F</from>
+              <to>G</to>
+              <order>2</order>
+            </arc>
+          </graph>          
+        \end{minted}
+
+\section{Задание 2: Создание функции по графу}
     \subsection{Описание}
+
+        \textbf{На входе:} ориентированный граф с именованными вершинами как
+        описано в задании 1.
+
+        \textbf{На выходе:} линейное представление функции, реализуемой графом в
+        префиксной скобочной записи: $$A_1(B_1(C_1(\dots), \dots, C_m(\dots)),
+        \dots, B_n(\dots))$$
+
+        % \textbf{Реализация:}
+
     \subsection{Пример исполнения программы}
 
-\section{Задание 3}
+        Рассмотрим пример, созданный для программы в файле 'test2.xml', со
+        следующим содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            <graph>
+            <vertex>A</vertex>
+            <vertex>D</vertex>
+            <vertex>B</vertex>
+            <vertex>E</vertex>
+            <vertex>C</vertex>
+            <vertex>G</vertex>
+            <vertex>F</vertex>
+            <arc>
+              <from>A</from>
+              <to>D</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>A</from>
+              <to>D</to>
+              <order>2</order>
+            </arc>
+            <arc>
+              <from>D</from>
+              <to>G</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>B</from>
+              <to>E</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>E</from>
+              <to>F</to>
+              <order>1</order>
+            </arc>
+            <arc>
+              <from>C</from>
+              <to>E</to>
+              <order>2</order>
+            </arc>
+            <arc>
+              <from>F</from>
+              <to>G</to>
+              <order>2</order>
+            </arc>
+          </graph>          
+        \end{minted}
+
+        Запускаем программу с помощью консоли следующим образом:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            python task2.py input=tests\task2\task2.xml output=tests\task2\task2_res.txt
+        \end{minted}
+
+        В качестве результата получаем файл 'task2_res.xml' с содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            G(D(A(), A()), F(E(B(), C()))) 
+        \end{minted}
+
+\section{Задание 3: Вычисление значение функции на графе}
     \subsection{Описание}
+
+        \textbf{На входе:}
+        \begin{enumerate}
+            \item Текстовый файл с описанием графа в виде списка дуг (смотри задание 1).
+            \item Текстовый файл соответствий арифметических операций именам вершин:
+            
+                \begin{center}
+                    $a_1 : 1\text{-я операция}$ \\
+                    $a_2 : 2\text{-я операция}$ \\
+                    $\dots$ \\
+                    $a_n : n\text{-я операция}$, \\
+                \end{center}
+                где $a_i$ -- имя $i$-й вершины, $i$-я операция -- символ операции, соответствующий вершине $a_i$.
+                
+                Допустимы следующие символы операций: \\
+                $+$ -- cумма значений,\\
+                $*$ -- произведение значений,\\
+                $exp$ -- экспонирование входного значения,\\
+                число -- любая числовая константа.\\		
+        \end{enumerate}
+
+        \textbf{На выходе:} значение функции, построенной по графу и файлу.
+        
+        % \textbf{Реализация:}
+
     \subsection{Пример исполнения программы}
 
-\section{Задание 4}
+        Рассмотрим пример, созданный для программы в файлах 'graph.txt' и
+        'operations.txt', со следующим содержимым:
+
+        \textbf{graph.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            (v1, v4, 1), (v2, v4, 2), (v2, v5, 1), (v3, v5, 2), (v4, v6, 1), (v5, v6, 2), (v6, v7, 1)
+        \end{minted}
+
+        \textbf{operations.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            {
+                "v1" : 3,
+                "v2" : 2,
+                "v3" : 5,
+                "v4" : "*",
+                "v5" : "+",
+                "v6" : "+",
+                "v7" : "exp"
+            }
+        \end{minted}
+        
+        Запускаем программу с помощью консоли следующим образом:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            python task3.py graph=tests\task3\graph.txt ops=tests\task3\operations.txt output=tests\task3\res.txt
+        \end{minted}
+
+        В качестве результата получаем файл 'res.txt' с содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            442413.3920089205
+        \end{minted}
+
+\section{Задание 4: Построение многослойной нейронной сети}
     \subsection{Описание}
+
+        \textbf{На входе:}
+            \begin{enumerate}
+                \item Файл с набором матриц весов межнейронных связей:
+                \begin{center}
+                    $M_1 : [a_{11}^1, a_{12}^1, \dots, a_{1n_1}^1], \dots, [a_{m_11}^1, a_{m_12}^1, \dots ,a_{m_1n_1}^1]$ \\
+                    $M_2 : [a_{11}^2, a_{12}^2, \dots, a_{1n_2}^2], \dots, [a_{m_21}^2, a_{m_22}^2, \dots ,a_{m_2n_2}^2]$\\
+                    $\dots$\\
+                    $M_p : [a_{11}^p, a_{12}^p, \dots, a_{1n_p}^p], \dots, [a_{m_p1}^p, a_{m_p2}^p, \dots,a_{m_pn_p}^p]$ \\                  
+                \end{center}
+                \item Файл с входным вектором в формате:
+                \begin{center}
+                    $x_1, x_2, \dots, x_k$.
+                \end{center}
+            \end{enumerate}
+
+        \textbf{На выходе:}
+            \begin{enumerate}
+                \item Сериализованная многослойная нейронная сеть с полносвязной
+                межслойной структурой. Файл с выходным вектором -- результатом
+                вычислений НС в формате: 
+                \begin{center}
+                    $y_1, y_2, \dots, y_k.$                
+                \end{center}
+                \item Сообщение об ошибке, если в формате входного вектора или
+                файла описания НС допущена ошибка.
+            \end{enumerate}
+
+        % \textbf{Реализация:}
+
     \subsection{Пример исполнения программы}
 
-\section{Задание 5}
+        Рассмотрим пример, созданный для программы в файлах 'x4.txt' и 'w.txt',
+        со следующим содержимым:
+
+        \textbf{x4.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [2, 2, 8]
+        \end{minted}
+        
+        \textbf{w.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [[[0.47519493033675375, 0.015705490366171526, 0.9433818257724572],
+            [0.48092032736144574, 0.13929695479782134, 0.6869903232566065],
+            [0.436988975888717, 0.20037642195993755, 0.17561406275527947]],
+            [[0.042224071742743785, 0.15331022315027187, 0.464635658411239],
+            [0.6000159964796773, 0.22606113281552231, 0.5301212736820182],
+            [0.19651133783303198, 0.7498835958139106, 0.28721556978456597]],
+            [[0.11837615025116721, 0.00927217999098906, 0.7504596929897048],
+            [0.5675946231090779, 0.9748635791740536, 0.30501309542663524],
+            [0.8574872089946126, 0.3047120321509168, 0.3376899733092712]]]
+        \end{minted}
+
+        Запускаем программу с помощью консоли следующим образом:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            task4.py x=tests\task4\x4.txt w=tests\task4\w.txt y=tests\task4\out.txt
+        \end{minted}
+
+        В качестве результата получаем файл 'out.txt' с содержимым:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [0.6599800423450157, 0.7982164099813447, 0.7427805995966905]
+        \end{minted}
+
+\section{Задание 5: Реализация метода обратного распространения ошибки для многослойной НС}
     \subsection{Описание}
+
+        \textbf{На входе:}
+            \begin{enumerate}
+                \item Текстовый файл с описанием НС (формат см. в задании 4).
+                \item Текстовый файл с обучающей выборкой:
+                    \begin{center}
+                        $[x_{1}^{1}, x_{2}^1, \dots, x_{k}^1] \rightarrow [y_{1}^1, y_{2}^1, \dots, y_{l}^1]$ \\
+                        $\dots$\\
+                        $[x_{1}^n, x_{2}^n, \dots, x_{k}^n] \rightarrow [y_{1}^n, y_{2}^n, \dots, y_{l}^n]$ \\
+                    \end{center}
+                    Формат описания входного вектора $x$ и выходного вектора $y$ соответствует формату из задания 4. 
+                \item Число итераций обучения (в строке параметров).
+            \end{enumerate}
+
+        \textbf{На выходе:} Текстовый файл с историей $N$ итераций обучения методом обратного распространения ошибки:
+        \begin{center}
+            $1 : \text{1-я ошибка}$ \\
+            $2 : \text{2-я ошибка}$ \\
+                $\dots$\\
+            $N : \text{N-я ошибка}$ \\
+        \end{center}
+
+        % \textbf{Реализация:}
+
     \subsection{Пример исполнения программы}
+
+        Рассмотрим пример, созданный для программы в файлах 'x5.txt', 'w.txt' и
+        'y.txt', со следующим содержимым:
+
+        \textbf{x5.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [
+                [-4, 1, 5],
+                [7, -1, -4],
+                [4, 14, 10],
+                [-8, -18, 6],
+            ]
+        \end{minted}
+
+        \textbf{w.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [[[0.47519493033675375, 0.015705490366171526, 0.9433818257724572],
+            [0.48092032736144574, 0.13929695479782134, 0.6869903232566065],
+            [0.436988975888717, 0.20037642195993755, 0.17561406275527947]],
+            [[0.042224071742743785, 0.15331022315027187, 0.464635658411239],
+            [0.6000159964796773, 0.22606113281552231, 0.5301212736820182],
+            [0.19651133783303198, 0.7498835958139106, 0.28721556978456597]],
+            [[0.11837615025116721, 0.00927217999098906, 0.7504596929897048],
+            [0.5675946231090779, 0.9748635791740536, 0.30501309542663524],
+            [0.8574872089946126, 0.3047120321509168, 0.3376899733092712]]]
+        \end{minted}
+
+        \textbf{y.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            [
+                [0, 0, 0],
+                [1, 1, 1],
+                [1, 1, 1],
+                [0, 0, 0],
+            ]
+        \end{minted}
+
+        Запускаем программу с помощью консоли следующим образом:
+
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            python task5.py x=tests\task5\x5.txt y=tests\task5\y.txt w=tests\task5\w.txt epochs=10 loss=tests\task5\results.txt
+        \end{minted}
+
+        В качестве результата получаем файл 'result.txt' с содержимым:
+
+        \textbf{result.txt}
+        \begin{minted}[breaklines,fontsize=\small]{text}
+            Ошибка на эпохе 1 равна 0.2832965082336704
+            Ошибка на эпохе 2 равна 0.28011549588401924
+            Ошибка на эпохе 3 равна 0.27719508418488775
+            Ошибка на эпохе 4 равна 0.2745690438749986
+            Ошибка на эпохе 5 равна 0.2722617577309298
+            Ошибка на эпохе 6 равна 0.2702545573996806
+            Ошибка на эпохе 7 равна 0.26849787858212437
+            Ошибка на эпохе 8 равна 0.2669367574826795
+            Ошибка на эпохе 9 равна 0.265525581639051            
+        \end{minted}
+
         % \begin{figure}[H]
         %     \centering
         %     \includegraphics[width=0.8\textwidth]{pic/3.png}
         %     \caption{Тест индекс-метода}
         % \end{figure}
-
-
 \end{document}
