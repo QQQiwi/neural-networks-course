@@ -16,6 +16,14 @@ python task1.py input=tests\test1.txt output=tests\task1.xml
 python task2.py input=tests\task1.xml output=tests\task2.txt
 ```
 
+## Задание 3
+
+Пример тестового запуска:
+
+```
+python task3.py graph=graph.txt ops=operations.txt output=res.txt
+```
+
 ## Задание 4
 
 Пример тестового запуска:
