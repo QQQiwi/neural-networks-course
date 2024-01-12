@@ -107,7 +107,7 @@
 \saname{И. И. Слеповичев}
 
 % Год выполнения отчета
-\date{2023}
+\date{2024}
 
 \maketitle
 
@@ -729,15 +729,72 @@
 
     \end{enumerate}
 
+    Стоит также упомянуть подходы, которые не рассмотрены в этом реферате, но
+    имеют неплохой потенциал для развития, при этом пока что не обладая большой
+    популярностью (см. источники):
 
-        % \begin{figure}[H]
-        %     \centering
-        %     \includegraphics[width=0.8\textwidth]{pic/3.png}
-        %     \caption{Тест индекс-метода}
-        % \end{figure}
+    \begin{enumerate}
+        \item Можно рассматривать задачу поиска аномалий как задачу бинарной
+        (или $n$-рной) классификации временных рядов на классы с
+        несбалансированным количеством элементов, принадлежащим этим классам.
+        Тогда можно пробовать применять подходы для решения, которые свойственны
+        при решении задачи классификации временных рядов "--- например, поиск
+        шейплетов и построение на их основе выборки для обучения
+        классификаторов и т.д.;
+        \item Можно визуализировать временной ряд с предварительно размеченными
+        отрезками/точками, в которых присутствует аномалия, и решать задачу с
+        помощью сверточных нейронных сетей (например, классификация
+        изображений);
+        \item Исследовать последовательность значений временного ряда на наличие
+        аномалий аналогично тому, как осуществляется классификация или обработка
+        текста "--- с применением методов NLP (в частности, с помощью
+        state-of-art моделей-трансформеров).
+    \end{enumerate}
 
-% \bibliography{}
+\begin{thebibliography}{99}
 
-% STL - https://www.wessa.net/download/stl.pdf
+    \bibitem{rnn2} ''Recurrent Neural Networks'', [Электронный ресурс] :
+    [статья] / URL https://www.ibm.com/cloud/learn/recurrent-neural-networks
+    (дата обращения 12.01.2024) Загл. с экрана. Яз. англ.
+
+    \bibitem{lstm1} Staudemeyer R.C., Morris E.R., ''Understanding LSTM "--- a
+    tutorial into Long Short-Term Memory Recurrent Neural Networks '',
+    [Электронный ресурс] : [статья] / URL https://arxiv.org/pdf/1909.09586.pdf
+    (дата обращения 12.01.2024) Загл. с экрана. Яз. англ.
+
+    \bibitem{lstm2} Fund W., ''LSTM – сети долгой краткосрочной памяти'',
+    [Электронный ресурс] : [статья] / URL
+    https://habr.com/ru/companies/wunderfund/articles/331310/ (дата обращения
+    12.01.2024) Загл. с экрана. Яз. рус.
+
+    \bibitem{torchlstm} ''LSTM'', [Электронный ресурс] : [статья] / URL
+    https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html
+    (дата обращения 12.01.2024) Загл. с экрана. Яз. англ.
+
+    \bibitem{stl} ''STL: A Seasonal-Trend Decomposition Procedure Based on
+    LOESS'', [Электронный ресурс] : [статья] / URL
+    https://www.wessa.net/download/stl.pdf (дата обращения 12.01.2024) Загл. с
+    экрана. Яз. англ.
+
+    \bibitem{mlopsblog} Bajaj A., ''Anomaly Detection in Time Series''
+    [Электронный ресурс] : [статья] / URL
+    https://neptune.ai/blog/anomaly-detection-in-time-series (дата обращения
+    12.01.2024) Загл. с экрана. Яз. англ.
+
+    \bibitem{ts} CyberLympha, ''Поиск аномалий во временных рядах'',
+    [Электронный ресурс] : [статья] / URL https://habr.com/ru/articles/588320/
+    (дата обращения 12.01.2024) Загл. с экрана. Яз. рус.
+
+    \bibitem{shapelet} Ye L., Keogh E. ''Time Series Shapelets: A New Primitive
+    for Data Mining'' [Электронный ресурс] : [статья] / URL
+    https://www.cs.ucr.edu/~eamonn/shaplet.pdf (дата обращения 12.01.2024) Загл.
+    с экрана. Яз. англ.
+
+    \bibitem{tstf} Theodoros N. ''Timeseries classification with a Transformer
+    model'' [Электронный ресурс] : [статья] / URL
+    https://keras.io/examples/timeseries/timeseries_classification_transformer/
+    (дата обращения 12.01.2024) Загл. с экрана. Яз. англ.
+
+\end{thebibliography}
 
 \end{document}
